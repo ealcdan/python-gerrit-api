@@ -8,7 +8,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests import Session
 from gerrit.utils.requester import Requester
-from gerrit.utils.common import decode_response, strip_trailing_slash
+from gerrit.utils.common import decode_response, strip_trailing_slash, strip_protocol
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +84,8 @@ class GerritClient:
         """
 
         netrc_client = netrc.netrc()
-        auth_tokens = netrc_client.authenticators(self._base_url)
+        hostname = strip_protocol(self._base_url)
+        auth_tokens = netrc_client.authenticators(hostname)
         if not auth_tokens:
             raise ValueError(
                 f"The '{self._base_url}' host name is not found in netrc file."

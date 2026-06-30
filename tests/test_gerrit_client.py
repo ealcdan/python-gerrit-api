@@ -268,6 +268,21 @@ class TestGetPasswordFromNetrc:
             password = basic_client.get_password_from_netrc_file()
             assert password == "password123"
 
+    def test_host_found_in_netrc_stripping_protocol(self, basic_client):
+        with patch("gerrit.base.netrc.netrc") as MockNetrc:
+            mock_netrc = MagicMock()
+            # Return password only for gerrit.example.com, not any host
+            mock_netrc.authenticators.side_effect = (
+                lambda host: ("user", "account", "password123")
+                if host == "gerrit.example.com"
+                else None
+            )
+            MockNetrc.return_value = mock_netrc
+
+            basic_client._base_url = "https://gerrit.example.com"
+            password = basic_client.get_password_from_netrc_file()
+            assert password == "password123"
+
     def test_host_not_found_raises(self, basic_client):
         with patch("gerrit.base.netrc.netrc") as MockNetrc:
             mock_netrc = MagicMock()

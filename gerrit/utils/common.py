@@ -16,6 +16,17 @@ def strip_trailing_slash(url: str) -> str:
     return url
 
 
+def strip_protocol(url: str) -> str:
+    """
+    remove url's leading protocol
+    :param url: url
+    :return: url without leading protocol
+    """
+    if "://" in url:
+        url = url.split("://", maxsplit=1)[1]
+    return url
+
+
 def decode_response(response: Any) -> Any:
     """Strip off Gerrit's magic prefix and decode a response.
     :returns:
