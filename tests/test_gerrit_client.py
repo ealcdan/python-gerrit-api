@@ -265,8 +265,8 @@ class TestGetPasswordFromNetrc:
             MockNetrc.return_value = mock_netrc
 
             basic_client._base_url = "gerrit.example.com"
-            password = basic_client.get_password_from_netrc_file()
-            assert password == "password123"
+            username, password = basic_client.get_password_from_netrc_file()
+            assert username == "user" and password == "password123"
 
     def test_host_not_found_raises(self, basic_client):
         with patch("gerrit.base.netrc.netrc") as MockNetrc:

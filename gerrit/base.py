@@ -43,7 +43,7 @@ class GerritClient:
             session = requests.Session()
 
         if use_netrc:
-            password = self.get_password_from_netrc_file()
+            username, password = self.get_password_from_netrc_file()
 
         if username and password:
             session.auth = (username, password)
@@ -89,7 +89,8 @@ class GerritClient:
             raise ValueError(
                 f"The '{self._base_url}' host name is not found in netrc file."
             )
-        return auth_tokens[2]
+        login, _, password = auth_tokens
+        return login, password
 
     def get_endpoint_url(self, endpoint: str) -> str:
         """
